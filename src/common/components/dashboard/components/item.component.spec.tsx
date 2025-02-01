@@ -2,7 +2,7 @@ import React from 'react';
 import { PeopleAlt as PeopleAltIcon } from '@mui/icons-material';
 import { fireEvent } from '@testing-library/react';
 import { renderWithRouter } from '#common/test';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ItemComponent, ClassesProps } from './item.component';
 import { DashboardItemProps } from '../dashboard.vm';
 
@@ -20,12 +20,17 @@ describe('common/dashboard/ItemComponent', () => {
 
     // Act
     const { getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
       <>
-        <Route
-          path={props.item.linkTo}
-          element={<h1>Test route destination</h1>}
-        />
+        <Routes>
+          <Route
+            path={props.item.linkTo}
+            element={<h1>Test route destination</h1>}
+          />
+          <Route
+            path="/"
+            element={<ItemComponent {...props} />}
+          />
+        </Routes>
       </>
     );
 
@@ -53,12 +58,17 @@ describe('common/dashboard/ItemComponent', () => {
 
     // Act
     const { getByTestId, getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
       <>
-        <Route
-          path={props.item.linkTo}
-          element={<h1>Test route destination</h1>}
-        />
+        <Routes>
+          <Route
+            path={props.item.linkTo}
+            element={<h1>Test route destination</h1>}
+          />
+          <Route
+            path="/"
+            element={<ItemComponent {...props} />}
+          />
+        </Routes>
       </>
     );
 
@@ -70,7 +80,7 @@ describe('common/dashboard/ItemComponent', () => {
     expect(getByText(props.item.subtitle)).toHaveClass(props.classes.subtitle);
   });
 
-  it('should navigate to route when click on item component', () => {
+  it('should navigate to route when click on item component', async () => {
     // Arrange
     const props = {
       item: {
@@ -89,13 +99,18 @@ describe('common/dashboard/ItemComponent', () => {
     };
 
     // Act
-    const { getByTestId, getByText } = renderWithRouter(
-      <ItemComponent {...props} />,
+    const { getByTestId, findByText } = renderWithRouter(
       <>
-        <Route
-          path={props.item.linkTo}
-          element={<h1>Test route destination</h1>}
-        />
+        <Routes>
+          <Route
+            path={props.item.linkTo}
+            element={<h1>Test route destination</h1>}
+          />
+          <Route
+            path="/"
+            element={<ItemComponent {...props} />}
+          />
+        </Routes>
       </>
     );
 
@@ -103,7 +118,7 @@ describe('common/dashboard/ItemComponent', () => {
     fireEvent.click(element);
 
     // Assert
-
-    expect(getByText('Test route destination')).toBeInTheDocument();
+    const destination = await findByText(/Test route destination/i);
+    expect(destination).toBeInTheDocument();
   });
 });

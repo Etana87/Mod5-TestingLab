@@ -1,20 +1,14 @@
-import React from 'react';
-import { createEmptyLookup, Lookup } from '#common/models';
+import { useState } from 'react';
 
-export const useConfirmationDialog = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [itemToDelete, setItemToDelete] = React.useState(createEmptyLookup());
+export function useConfirmationDialog() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const showDialog = () => setIsVisible(true);
+  const hideDialog = () => setIsVisible(false);
 
   return {
-    isOpen,
-    itemToDelete,
-    onAccept: () => {
-      setItemToDelete(createEmptyLookup());
-    },
-    onClose: () => setIsOpen(false),
-    onOpenDialog: (item: Lookup) => {
-      setIsOpen(true);
-      setItemToDelete(item);
-    },
+    isVisible,
+    showDialog,
+    hideDialog
   };
-};
+}

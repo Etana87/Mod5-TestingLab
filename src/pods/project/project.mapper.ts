@@ -23,3 +23,9 @@ export const mapProjectFromApiToVm = (
       }
     : viewModel.createEmptyProject();
 };
+
+export const mapProjectData = (data: any) => ({
+  id: data.project_id,
+  name: data.project_name,
+  status: data.project_status,
+});
